@@ -8,13 +8,15 @@ node_modules/
 # Build files
 dist/
 build/
+webpack.config.js
 
 # Environment variables
 .env
 
-# Development testing environemnt
+# Test files
 tests/
-server.js
+express.server.js
+
 
 # IDE files
 .vscode/

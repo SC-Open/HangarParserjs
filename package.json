@@ -2,19 +2,26 @@
   "name": "hangarparserjs",
   "version": "0.1.0",
   "description": "HangarParserjs by SC-Open parses RSI hangar data",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "main": "./js/webParser.js",
+  "browser": "window",
   "keywords": [
     "starcitizen"
   ],
   "author": "SC-Open",
   "license": "MIT",
   "dependencies": {
-    "chart.js": "^4.4.2"
+    "chart.js": "^4.4.2",
+    "moment": "^2.30.1"
   },
   "devDependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-middleware": "^7.2.1",
+    "webpack-hot-middleware": "^2.26.1"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "start": "node express.server.js"
   }
 }

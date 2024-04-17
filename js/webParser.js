@@ -1,10 +1,13 @@
 const fs = require('fs');
 const moment = require('moment');
+
 // read log.txt file and split new lines and store in rows
 fs.readFile('log.txt', { encoding: 'utf-8' }, (err, data) => {
     if (err) throw err;
     let rows = data.split('\n');
 console.log(`Number of rows read: ${rows.length}`);
+
+
 // filter rows that contain 'order #' and 'value:'
     let matchingRows = rows.filter(row => row.includes('order #') && row.includes('value:'));
 console.log(`Number of rows captured: ${matchingRows.length}`); // print the length of the matching rows
@@ -27,12 +30,15 @@ console.log(`Number of rows captured: ${matchingRows.length}`); // print the len
         }
     });
 console.log(`Number of date-cost pairs: ${dateCostPairs.length}`); // print the length of the date-cost pairs
+
 // sort date-cost pairs by date
     dateCostPairs.sort((a, b) => a[0].isBefore(b[0]) ? -1 : 1);
-// separate sorted date-cost pairs into dates and costs arrays
+
+    // separate sorted date-cost pairs into dates and costs arrays
     let sortedDates = dateCostPairs.map(pair => pair[0]);
     let sortedCosts = dateCostPairs.map(pair => pair[1]);
-// iterate through sortedDates and costs to create time series data
+
+    // iterate through sortedDates and costs to create time series data
     let timeSeries = [];
     let previousMonthYear = null;
     let previousTotal = 0;
@@ -53,7 +59,8 @@ console.log(`Number of date-cost pairs: ${dateCostPairs.length}`); // print the 
     }
 console.log(`Number of time series entries: ${timeSeries.length}`); // print the length of the time series data
 
-// write time series data to a chart with Chart.js
+
+// Generate an HTML chart from the time series data
 let chartData = `labels: [${timeSeries.map(entry => `"${entry[0]}"`).join(', ')}],\n`;
 chartData += `datasets: [{\n`;  // create a dataset for the current total
 chartData += `label: 'Monthly',\n`;    // label the dataset
@@ -70,4 +77,52 @@ let chartHtml = fs.readFileSync('chartTemplate.html', { encoding: 'utf-8' });
 chartHtml = chartHtml.replace('CHART_DATA', chartData);
 fs.writeFileSync('chart.html', chartHtml);
 console.log('chart.html written');
+});
+
+// write time series data to a chart with Chart.js
+let ctx = document.getElementById('myChart').getContext('2d');
+
+let labels = sortedTimeSeries.map(entry => moment(entry[0], 'YYYY MMM').format('MMM YY'));
+let data1 = sortedTimeSeries.map(entry => entry[1]);
+let data2 = sortedTimeSeries.map(entry => entry[2]);
+
+let chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Cost',
+            data: data1,
+            borderColor: 'rgb(75, 192, 192)',
+            fill: false
+        }, {
+            label: 'Cumulative Total',
+            data: data2,
+            borderColor: 'rgb(255, 99, 132)',
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Time Series Chart'
+        },
+        scales: {
+            xAxes: [{
+                type: 'time',
+                time: {
+                    unit: 'month',
+                    displayFormats: {
+                        month: 'MMM YY'
+                    }
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
 });
