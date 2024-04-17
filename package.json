@@ -1,0 +1,20 @@
+{
+  "name": "hangarparserjs",
+  "version": "0.1.0",
+  "description": "HangarParserjs by SC-Open parses RSI hangar data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "starcitizen"
+  ],
+  "author": "SC-Open",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^4.4.2"
+  },
+  "devDependencies": {
+    "express": "^4.19.2"
+  }
+}
